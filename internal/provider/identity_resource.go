@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 package provider
 
 import (
@@ -220,16 +217,10 @@ func (r *IdentityResource) Create(ctx context.Context, req resource.CreateReques
 	data.Id = types.StringValue(result.IdentityId)
 	data.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))
 
-	values, err := pAPI.GetAllRelatedValues(data.Id.ValueString())
+	err = pAPI.SyncValues(data.Id.ValueString())
 	if err != nil {
-		resp.Diagnostics.AddError("error by get all related values for current creating identity", err.Error())
+		resp.Diagnostics.AddError("error by sync values for current created identity", err.Error())
 		return
-	}
-	for _, v := range values {
-		err := pAPI.SyncValue(v.Id)
-		if err != nil {
-			resp.Diagnostics.AddError(fmt.Sprintf("error by sync value %s for current creating identity", v), err.Error())
-		}
 	}
 	if resp.Diagnostics.HasError() {
 		return
