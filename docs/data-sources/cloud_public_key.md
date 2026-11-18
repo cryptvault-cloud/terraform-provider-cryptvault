@@ -13,9 +13,9 @@ description: |-
 
 Hold a publicKey from an identity, created on an other Device (private key is unknown)
 
-As an example: 
+As an example:
 
-A team gives his owner a public key to add them to the cryptvault. 
+A team gives his owner a public key to add them to the cryptvault.
 
 This can be managed by owner over this data source.
 

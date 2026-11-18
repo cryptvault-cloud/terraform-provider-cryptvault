@@ -62,11 +62,11 @@ resource "cryptvault_cloud_identity" "value1-reader" {
 
 Required:
 
-- `right_value_pattern` (String) Path to right point separated. 
-						
+- `right_value_pattern` (String) Path to right point separated.
+
 Have to match /^\((?P<directions>(r|w|d)+)\)(?P<target>(VALUES|IDENTITY|SYSTEM))(?P<pattern>(\.([\w\-]+|[>\*]{1}))+)$/
 
-some examples: 
+some examples:
 	- (rwd)VALUES.foo.bar
 	- (rdw)VALUES.foo.>
 	- (rwd)VALUES.>
@@ -74,7 +74,7 @@ some examples:
 	- (r)IDENTITY.>
 	- (rd)VALUES.foo.*
 
-Explain: 
+Explain:
 - r = read
 - w = write
 - d = delete
