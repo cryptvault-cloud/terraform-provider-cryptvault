@@ -220,10 +220,8 @@ func (r *ValueResource) Update(ctx context.Context, req resource.UpdateRequest, 
 	}
 	value, err := pApi.UpdateValue(data.Id.ValueString(), data.Name.ValueString(), data.Passframe.ValueString(), client.ValueType(data.Type.ValueString()))
 	if err != nil {
-		if err != nil {
-			resp.Diagnostics.AddError("error by update vault", err.Error())
-			return
-		}
+		resp.Diagnostics.AddError("error by update vault", err.Error())
+		return
 	}
 
 	data.Id = types.StringValue(value)

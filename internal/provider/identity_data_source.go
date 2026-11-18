@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	client "github.com/cryptvault-cloud/api"
-	"github.com/cryptvault-cloud/helper"
+	"github.com/cryptvault-cloud/api/utils"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -100,7 +100,7 @@ func (d *IdentityDataSource) Read(ctx context.Context, req datasource.ReadReques
 		return
 	}
 
-	private_key, err := helper.GetPrivateKeyFromB64String(data.PrivateKey.ValueString())
+	private_key, err := utils.GetPrivateKeyFromB64String(data.PrivateKey.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError(fmt.Sprintf("Private key is not an ecdsa.Private key: %s", err.Error()), "")
 		return
@@ -109,7 +109,7 @@ func (d *IdentityDataSource) Read(ctx context.Context, req datasource.ReadReques
 	vault_id := data.VaultID.ValueString()
 
 	pApi := d.client.GetProtectedApi(private_key, vault_id)
-	pubToken, err := helper.NewBase64PublicPem(&private_key.PublicKey)
+	pubToken, err := utils.NewBase64PublicPem(&private_key.PublicKey)
 	if err != nil {
 		resp.Diagnostics.AddError("Public key can not be pemed", err.Error())
 		return

@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	client "github.com/cryptvault-cloud/api"
-	"github.com/cryptvault-cloud/helper"
+	"github.com/cryptvault-cloud/api/utils"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
@@ -30,7 +30,7 @@ func getProtectedApi(api client.ApiHandler, privateKey basetypes.StringValue, va
 	if privateKey.IsNull() {
 		return nil, errors.New("private not allowed to be null")
 	}
-	private_key, err := helper.GetPrivateKeyFromB64String(privateKey.ValueString())
+	private_key, err := utils.GetPrivateKeyFromB64String(privateKey.ValueString())
 	if err != nil {
 		return nil, errors.Join(errors.New("private key is not an ecdsa.Private key"), err)
 	}

@@ -9,7 +9,7 @@ import (
 	"time"
 
 	client "github.com/cryptvault-cloud/api"
-	"github.com/cryptvault-cloud/helper"
+	"github.com/cryptvault-cloud/api/utils"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -157,7 +157,7 @@ func (r *VaultResource) Create(ctx context.Context, req resource.CreateRequest, 
 	}
 
 	data.Id = types.StringValue(vaultid)
-	pubKey, err := helper.NewBase64PublicPem(publicKey)
+	pubKey, err := utils.NewBase64PublicPem(publicKey)
 
 	if err != nil {
 		resp.Diagnostics.AddError("Unable pack public key", err.Error())
@@ -171,7 +171,7 @@ func (r *VaultResource) Create(ctx context.Context, req resource.CreateRequest, 
 		return
 	}
 	data.Operator_Id = types.StringValue(operatorId)
-	privKey, err := helper.GetB64FromPrivateKey(privateKey)
+	privKey, err := utils.GetB64FromPrivateKey(privateKey)
 	if err != nil {
 		resp.Diagnostics.AddError("Unable pack private key", err.Error())
 		return

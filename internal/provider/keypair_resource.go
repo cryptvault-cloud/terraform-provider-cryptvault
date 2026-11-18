@@ -6,7 +6,7 @@ import (
 	"time"
 
 	client "github.com/cryptvault-cloud/api"
-	"github.com/cryptvault-cloud/helper"
+	"github.com/cryptvault-cloud/api/utils"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -104,12 +104,12 @@ func (r *KeyPairResource) Create(ctx context.Context, req resource.CreateRequest
 		resp.Diagnostics.AddError("error by create a new keypair", err.Error())
 		return
 	}
-	b64priv, err := helper.GetB64FromPrivateKey(privKey)
+	b64priv, err := utils.GetB64FromPrivateKey(privKey)
 	if err != nil {
 		resp.Diagnostics.AddError("error by create a new keypair", err.Error())
 		return
 	}
-	b64pub, err := helper.GetB64FromPublicKey(pubKey)
+	b64pub, err := utils.GetB64FromPublicKey(pubKey)
 	if err != nil {
 		resp.Diagnostics.AddError("error by create a new keypair", err.Error())
 		return

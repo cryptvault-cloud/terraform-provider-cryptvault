@@ -3,7 +3,7 @@ package provider
 import (
 	"context"
 
-	"github.com/cryptvault-cloud/helper"
+	"github.com/cryptvault-cloud/api/utils"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -33,9 +33,9 @@ func (d *PublicKeyDataSource) Schema(ctx context.Context, req datasource.SchemaR
 		MarkdownDescription: `
 Hold a publicKey from an identity, created on an other Device (private key is unknown)
 
-As an example: 
+As an example:
 
-A team gives his owner a public key to add them to the cryptvault. 
+A team gives his owner a public key to add them to the cryptvault.
 
 This can be managed by owner over this data source.
 		`,
@@ -60,7 +60,7 @@ func (d *PublicKeyDataSource) Read(ctx context.Context, req datasource.ReadReque
 		return
 	}
 
-	_, err := helper.GetPublicKeyFromB64String(data.PublicKey.ValueString())
+	_, err := utils.GetPublicKeyFromB64String(data.PublicKey.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError("Public key is invalid can not be decoded", err.Error())
 		return

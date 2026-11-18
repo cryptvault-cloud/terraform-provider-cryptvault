@@ -8,7 +8,7 @@ import (
 	"time"
 
 	client "github.com/cryptvault-cloud/api"
-	"github.com/cryptvault-cloud/helper"
+	"github.com/cryptvault-cloud/api/utils"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -27,8 +27,8 @@ var ValuePatternRegex *regexp.Regexp
 var ValuesPatternRegex *regexp.Regexp
 
 func init() {
-	ValuePatternRegex = regexp.MustCompile(helper.ValuePatternRegexStr)
-	ValuesPatternRegex = regexp.MustCompile(helper.ValuesPatternRegexStr)
+	ValuePatternRegex = regexp.MustCompile(utils.ValuePatternRegexStr)
+	ValuesPatternRegex = regexp.MustCompile(utils.ValuesPatternRegexStr)
 }
 
 func NewIdentityResource() resource.Resource {
@@ -103,11 +103,11 @@ func (r *IdentityResource) Schema(ctx context.Context, req resource.SchemaReques
 						"right_value_pattern": schema.StringAttribute{
 							Required: true,
 							MarkdownDescription: fmt.Sprintf(`
-Path to right point separated. 
-						
+Path to right point separated.
+
 Have to match /%s/
 
-some examples: 
+some examples:
 	- (rwd)VALUES.foo.bar
 	- (rdw)VALUES.foo.>
 	- (rwd)VALUES.>
@@ -115,13 +115,13 @@ some examples:
 	- (r)IDENTITY.>
 	- (rd)VALUES.foo.*
 
-Explain: 
+Explain:
 - r = read
 - w = write
 - d = delete
 - > = same area and deeper (next . split group)
 - * = same area but each possible string
-							`, helper.ValuePatternRegexStr),
+							`, utils.ValuePatternRegexStr),
 							Validators: []validator.String{
 								stringvalidator.RegexMatches(ValuePatternRegex, "Have to match right string pattern"),
 							},
@@ -203,7 +203,7 @@ func (r *IdentityResource) Create(ctx context.Context, req resource.CreateReques
 		return
 	}
 
-	pubKey, err := helper.GetPublicKeyFromB64String(data.PublicKey.ValueString())
+	pubKey, err := utils.GetPublicKeyFromB64String(data.PublicKey.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError("error convert key to edcsa.publickey: "+err.Error(), err.Error())
 		return
@@ -272,7 +272,7 @@ func (r *IdentityResource) Read(ctx context.Context, req resource.ReadRequest, r
 			resp.Diagnostics.AddError("Public key is not set... this schould not happen", "")
 			return
 		}
-		id, err := helper.Base64PublicPem(data.PublicKey.ValueString()).GetIdentityId(data.VaultID.ValueString())
+		id, err := utils.Base64PublicPem(data.PublicKey.ValueString()).GetIdentityId(data.VaultID.ValueString())
 		if err != nil {
 			resp.Diagnostics.AddError("unable to create id form public key", err.Error())
 			return
@@ -320,7 +320,7 @@ func (r *IdentityResource) Update(ctx context.Context, req resource.UpdateReques
 			resp.Diagnostics.AddError("Public key is not set... this schould not happen", "")
 			return
 		}
-		id, err := helper.Base64PublicPem(data.PublicKey.ValueString()).GetIdentityId(data.VaultID.ValueString())
+		id, err := utils.Base64PublicPem(data.PublicKey.ValueString()).GetIdentityId(data.VaultID.ValueString())
 		if err != nil {
 			resp.Diagnostics.AddError("unable to create id form public key", err.Error())
 			return
@@ -330,10 +330,8 @@ func (r *IdentityResource) Update(ctx context.Context, req resource.UpdateReques
 
 	_, err = pApi.UpdateIdentity(data.Id.ValueString(), data.Name.ValueString(), rightInputs)
 	if err != nil {
-		if err != nil {
-			resp.Diagnostics.AddError("error by update vault", err.Error())
-			return
-		}
+		resp.Diagnostics.AddError("error by update vault", err.Error())
+		return
 	}
 
 	data.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))
@@ -355,7 +353,7 @@ func (r *IdentityResource) Delete(ctx context.Context, req resource.DeleteReques
 			resp.Diagnostics.AddError("Public key is not set... this schould not happen", "")
 			return
 		}
-		id, err := helper.Base64PublicPem(data.PublicKey.ValueString()).GetIdentityId(data.VaultID.ValueString())
+		id, err := utils.Base64PublicPem(data.PublicKey.ValueString()).GetIdentityId(data.VaultID.ValueString())
 		if err != nil {
 			resp.Diagnostics.AddError("unable to create id form public key", err.Error())
 			return
